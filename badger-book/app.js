@@ -1,3 +1,23 @@
+/**
+ * Fetching the student data
+ */
+
+fetch("https://cs571.org/api/f23/hw2/students", {
+	method: "GET",
+	headers: {
+	  "X-CS571-ID": CS571.getBadgerId()
+	}
+  })
+  .then(response => response.json())
+  .then(data => {
+	console.log(data)
+	document.getElementById("num-results").innerText = data.length;
+	document.getElementById("students").innerHTML = buildStudentsHtml(data);
+	
+  })
+  .catch(error => console.error(error)) // Print errors
+
+
 
 /**
  * Given an array of students, generates HTML for all students
@@ -20,7 +40,31 @@ function buildStudentsHtml(studs) {
 function buildStudentHtml(stud) {
 	let html = `<div>`;
 	html += `<h2>${stud.name.first} ${stud.name.last}</h2>`;
-	html += `</div>`
+	html += `</div>`;
+	html += `<div>`;
+	html += `<h5><strong><i>${stud.major}</i></strong></h5>`;
+	html += `</div>`;
+	if (stud.fromWisconsin == true){
+		html += `<div>`;
+		html += `<h6>${stud.name.first} is taking ${stud.numCredits} credits and is from Wisconsin</h6>`;
+		html += `</div>`;
+	}
+	else{
+		html += `<div>`;
+		html += `<h6>${stud.name.first} is taking ${stud.numCredits} credits and is <strong><i> not </i></strong> from Wisconsin</h6>`;
+		html += `</div>`;
+	}
+
+	html += `<div>`;
+	html += `<h6>${stud.name.first} has a total of ${stud.interests.length} interests which include:</h6>`;
+	html += `</div>`;
+	html += `<div>`;
+	html += `<ul>`;
+	for(i = 0; i < stud.interests.length; i++){
+		html += `<li> ${stud.interests[i]}</li>`;
+	}
+	html += `</div>`;
+
 	return html;
 }
 
